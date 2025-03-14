@@ -6,15 +6,21 @@ using static Enum.HealthState;
 
 namespace Health
 {
-	public class HealthController: MonoBehaviour // todo: Hacer HUD de la vida, y marcador de vida de los enemigos
+	public class HealthController: MonoBehaviour // todo: Hacer marcador de vida de los enemigos
 	{
 		[SerializeField] private float maxHealth;
 
+		private static AudioSource _audio;
+
+		public float MaxHealth => maxHealth;
 		public float Health { get; set; }
 		public HealthState State { get; private set; }
 
 		private void Start()
 		{
+			_audio = gameObject.AddComponent<AudioSource>();
+			_audio.clip = Resources.Load<AudioClip>("Sounds/HitSound");
+			
 			State = Alive;
 			Health = maxHealth;
 
@@ -24,6 +30,7 @@ namespace Health
 		private void Update()
 		{
 			if (State == Alive) State = Health > 0 ? Alive : Dead;
+			if (State == Dead) gameObject.layer = LayerMask.NameToLayer("Background");
 		}
 
 		private void OnTriggerEnter2D(Collider2D other)
@@ -47,6 +54,8 @@ namespace Health
 				Health -= attack.Damage;
 				Destroy(other.gameObject);
 			}
+			
+			_audio.Play();
 		}
 	}
 }
