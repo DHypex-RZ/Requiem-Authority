@@ -14,7 +14,9 @@ namespace Combat.Prefab
 
 		private void Start()
 		{
+			audio = gameObject.AddComponent<AudioSource>();
 			int position = Parent.transform.rotation.y == 0 ? 1 : -1;
+			// audio.clip = Resources.Load<AudioClip>("Sounds/ShootSound");
 			transform.position = Parent.transform.position + new Vector3(position, 0, 0);
 			Destroy(gameObject, Lifetime);
 		}
@@ -23,6 +25,8 @@ namespace Combat.Prefab
 		{
 			if (!other.CompareTag("Projectile")) return;
 
+			audio.clip = Resources.Load<AudioClip>("Sounds/ParrySound");
+			audio.Play();
 			ProjectileController bullet = other.GetComponent<ProjectileController>();
 			bullet.CanSurpassEnemies = false;
 			bullet.GetComponent<SpriteRenderer>().flipX = true;

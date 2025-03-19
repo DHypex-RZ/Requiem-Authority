@@ -18,8 +18,12 @@ namespace Combat.Prefab
 
 		private void Start()
 		{
+			audio = gameObject.AddComponent<AudioSource>();
+			audio.clip = Resources.Load<AudioClip>("Sounds/ShootSound");
+			audio.volume = 0.3f;
 			_rb = GetComponent<Rigidbody2D>();
 			_rb.velocity = transform.right * Speed;
+			audio.Play();
 			Destroy(gameObject, Lifetime);
 		}
 

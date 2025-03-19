@@ -10,7 +10,7 @@ namespace Health
 	{
 		[SerializeField] private float maxHealth;
 
-		private static AudioSource _audio;
+		private AudioSource _audio;
 
 		public float MaxHealth => maxHealth;
 		public float Health { get; set; }
