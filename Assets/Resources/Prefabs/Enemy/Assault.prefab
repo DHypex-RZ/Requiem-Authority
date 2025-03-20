@@ -83,9 +83,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxDetectionDistance: 25
-  chargerCapacity: 15
+  chargerCapacity: 25
   timeToReload: 3
-  intervalIntoShoots: 0.65
+  intervalIntoShoots: 0.55
 --- !u!114 &9200787227422135870
 MonoBehaviour:
   m_ObjectHideFlags: 0

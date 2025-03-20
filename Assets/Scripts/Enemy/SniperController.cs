@@ -31,7 +31,7 @@ namespace Enemy
 			if ((direction > 0 && transform.position.x >= _initialPosition + platformLimitDistance) ||
 				(direction < 0 && transform.position.x <= _initialPosition - platformLimitDistance)) direction = 0;
 
-			if (!target || target.collider.tag is not ("Player" or "Enemy")) return;
+			if (!target || target.collider.tag is not ("Player" or "Enemy" or "Shield")) return;
 
 			rangeCombat.Shoot(targetRotation);
 		}

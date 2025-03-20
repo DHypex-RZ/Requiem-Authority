@@ -1,4 +1,4 @@
-﻿using Combat.Prefab;
+using Combat.Prefab;
 using Enum;
 using Player;
 using UnityEngine;
@@ -13,14 +13,20 @@ namespace Health
 		private AudioSource _audio;
 
 		public float MaxHealth => maxHealth;
-		public float Health { get; set; }
+		public float Health { get; private set; }
 		public HealthState State { get; private set; }
+
+		public void Heal(float amount)
+		{
+			Health += amount;
+			if (Health > maxHealth) Health = maxHealth;
+		}
 
 		private void Start()
 		{
 			_audio = gameObject.AddComponent<AudioSource>();
 			_audio.clip = Resources.Load<AudioClip>("Sounds/HitSound");
-			
+
 			State = Alive;
 			Health = maxHealth;
 
@@ -30,7 +36,12 @@ namespace Health
 		private void Update()
 		{
 			if (State == Alive) State = Health > 0 ? Alive : Dead;
-			if (State == Dead) gameObject.layer = LayerMask.NameToLayer("Background");
+
+			if (State != Dead) return;
+
+			gameObject.layer = LayerMask.NameToLayer("Background");
+
+			if (tag is not ("Player" or "Enemy")) Destroy(gameObject);
 		}
 
 		private void OnTriggerEnter2D(Collider2D other)
@@ -54,7 +65,7 @@ namespace Health
 				Health -= attack.Damage;
 				Destroy(other.gameObject);
 			}
-			
+
 			_audio.Play();
 		}
 	}

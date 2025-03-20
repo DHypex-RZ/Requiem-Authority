@@ -27,5 +27,12 @@ namespace Combat
 		}
 
 		public void Shoot() { Shoot(_origin.rotation); }
+
+		internal void SpecialShoot(float specialDamage, float specialSpeed)
+		{
+			GameObject bullet = Instantiate(prefab, _origin.position, _origin.rotation);
+			ProjectileController controller = bullet.GetComponent<ProjectileController>();
+			controller.SetParameters(specialDamage, lifetime, specialSpeed, false);
+		}
 	}
 }

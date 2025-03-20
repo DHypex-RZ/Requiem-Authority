@@ -1,14 +1,13 @@
 using Combat;
-using Health;
 using Mobility;
 using UnityEngine;
 
-namespace Player //todo: Hacer AbilityController
+namespace Player
 {
 	public class PlayerController: MonoBehaviour
 	{
 		private InputController _input;
-		private HealthController _health;
+		private AbilityController _ability;
 		private MovementController _movement;
 		private DashController _dash;
 		private PhysicCombatController _physicCombat;
@@ -17,7 +16,7 @@ namespace Player //todo: Hacer AbilityController
 		private void Start()
 		{
 			_input = GetComponent<InputController>();
-			_health = GetComponent<HealthController>();
+			_ability = GetComponent<AbilityController>();
 			_movement = GetComponent<MovementController>();
 			_dash = GetComponent<DashController>();
 			_physicCombat = GetComponent<PhysicCombatController>();
@@ -28,6 +27,10 @@ namespace Player //todo: Hacer AbilityController
 		{
 			if (_input.IsClickedLeft) _rangeCombat.Shoot();
 			else if (_input.IsClickedRight) _physicCombat.RealizeAttack();
+
+			if (_input.IsPressedQ) StartCoroutine(_ability.Heal());
+			if (_input.IsPressedW) StartCoroutine(_ability.Shield());
+			if (_input.IsPressedE) StartCoroutine(_ability.Sniper());
 		}
 
 		private void FixedUpdate()
