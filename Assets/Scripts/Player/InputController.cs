@@ -18,7 +18,7 @@ namespace Player
 		private void Update()
 		{
 			HorizontalInput = Input.GetAxis("Horizontal");
-			IsPressedSpace = Input.GetKey(KeyCode.Space);
+			IsPressedSpace = Input.GetKey(KeyCode.Space);                                                               
 			IsPressedShift = Input.GetKey(KeyCode.LeftShift);
 			IsPressedCtrl = Input.GetKey(KeyCode.LeftControl);
 			IsPressedF = Input.GetKey(KeyCode.F);
