@@ -4,16 +4,16 @@ namespace Player
 {
 	public class InputController: MonoBehaviour
 	{
-		internal float HorizontalInput { get; private set; }
-		internal bool IsPressedSpace { get; private set; }
-		internal bool IsPressedShift { get; private set; }
-		internal bool IsPressedCtrl { get; private set; }
-		internal bool IsPressedQ { get; private set; }
-		internal bool IsPressedW { get; private set; }
-		internal bool IsPressedE { get; private set; }
-		internal bool IsPressedF { get; private set; }
-		internal bool IsClickedLeft { get; private set; }
-		internal bool IsClickedRight { get; private set; }
+		internal static float HorizontalInput { get; private set; }
+		internal static bool IsPressedSpace { get; private set; }
+		internal static bool IsPressedShift { get; private set; }
+		internal static bool IsPressedCtrl { get; private set; }
+		internal static bool IsPressedQ { get; private set; }
+		internal static bool IsPressedW { get; private set; }
+		internal static bool IsPressedE { get; private set; }
+		internal static bool IsPressedF { get; private set; }
+		internal static bool IsClickedLeft { get; private set; }
+		internal static bool IsClickedRight { get; private set; }
 
 		private void Update()
 		{

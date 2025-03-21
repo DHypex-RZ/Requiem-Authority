@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Player.InputController;
 
 namespace Player.Animation
 {
@@ -8,18 +9,13 @@ namespace Player.Animation
 		private static readonly int Run = Animator.StringToHash("run");
 
 		private Animator _animator;
-		private InputController _input;
 
-		private void Start()
-		{
-			_animator = GetComponent<Animator>();
-			_input = GetComponent<InputController>();
-		}
+		private void Start() { _animator = GetComponent<Animator>(); }
 
 		private void Update()
 		{
-			_animator.SetBool(Move, _input.HorizontalInput != 0);
-			_animator.SetFloat(Run, _input.HorizontalInput != 0 && _input.IsPressedShift ? 1.45f : 1f);
+			_animator.SetBool(Move, HorizontalInput != 0);
+			_animator.SetFloat(Run, HorizontalInput != 0 && IsPressedShift ? 1.45f : 1f);
 		}
 	}
 }
