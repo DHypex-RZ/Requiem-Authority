@@ -15,6 +15,7 @@ namespace Combat
 		private bool _sniperInCooldown;
 		[SerializeField] private float shieldCooldown;
 		private bool _shieldInCooldown;
+		[SerializeField] private float shieldDamage;
 
 		private HealthController _health;
 		private RangeCombatController _sniper;

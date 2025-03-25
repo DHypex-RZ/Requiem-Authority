@@ -50,7 +50,7 @@ namespace Enemy
 
 			if (state == InGuard && target && target.collider.CompareTag("Enemy")) return;
 
-			if (!target || target.collider.tag is not ("Player" or "Enemy")) return;
+			if (!target || target.collider.tag is not ("Player" or "Enemy" or "Shield")) return;
 
 			if (_bulletsCount == _timesToShoot && _timer >= intervalIntoShoots)
 			{

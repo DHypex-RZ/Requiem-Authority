@@ -40,6 +40,7 @@ namespace Health
 			if (State != Dead) return;
 
 			gameObject.layer = LayerMask.NameToLayer("Background");
+			GetComponent<Collider2D>().enabled = false;
 
 			if (tag is not ("Player" or "Enemy")) Destroy(gameObject);
 		}

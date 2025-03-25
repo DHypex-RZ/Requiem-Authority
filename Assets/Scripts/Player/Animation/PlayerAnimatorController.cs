@@ -1,5 +1,5 @@
 using UnityEngine;
-using static Player.InputController;
+using static UnityEngine.Input;
 
 namespace Player.Animation
 {
@@ -14,8 +14,8 @@ namespace Player.Animation
 
 		private void Update()
 		{
-			_animator.SetBool(Move, HorizontalInput != 0);
-			_animator.SetFloat(Run, HorizontalInput != 0 && IsPressedShift ? 1.45f : 1f);
+			_animator.SetBool(Move, GetAxisRaw("Horizontal") != 0);
+			_animator.SetFloat(Run, GetAxisRaw("Horizontal") != 0 && GetKey(KeyCode.LeftShift) ? 1.45f : 1f);
 		}
 	}
 }

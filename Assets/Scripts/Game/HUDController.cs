@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Scene
+namespace Game
 {
 	public class HUDController: MonoBehaviour
 	{
@@ -15,9 +15,6 @@ namespace Scene
 			_healthBar = GameObject.Find("Health").GetComponent<Image>();
 		}
 
-		void Update()
-		{
-			_healthBar.fillAmount = _playerHealth.Health / _playerHealth.MaxHealth;
-		}
+		private void Update() { _healthBar.fillAmount = _playerHealth.Health / _playerHealth.MaxHealth; }
 	}
 }

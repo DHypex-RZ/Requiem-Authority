@@ -8,6 +8,7 @@ namespace Enemy
 {
 	public class TankController: EnemyController
 	{
+		[SerializeField] private float attackDistance;
 		[SerializeField] private HealthController enemyProtected;
 
 		protected override void Start()
@@ -26,9 +27,9 @@ namespace Enemy
 			if (enemyProtected) state = enemyProtected.State == Dead ? InDanger : InGuard;
 			else state = InDanger;
 
-			if (Mathf.Abs(targetPosition.x) < maxDetectionDistance) physicCombat.RealizeAttack();
+			if (Mathf.Abs(targetPosition.x) < attackDistance) physicCombat.RealizeAttack();
 		}
 
-		private void FixedUpdate() { movement.Move(direction, state == InDanger); }
+		private void FixedUpdate() { movement.Move(direction, state == InDanger && target && target.collider.CompareTag("Player")); }
 	}
 }

@@ -50,7 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 522ca7a6885e4b4bb78d5830788593f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDetectionDistance: 3.75
+  maxDetectionDistance: 20
+  attackDistance: 3.75
   enemyProtected: {fileID: 0}
 --- !u!114 &6861341918723883323
 MonoBehaviour:
