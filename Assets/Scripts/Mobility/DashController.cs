@@ -3,38 +3,43 @@ using UnityEngine;
 
 namespace Mobility
 {
-	public class DashController: MonoBehaviour
+	[RequireComponent(typeof(MoveController), typeof(JumpController))]
+	public class DashController: MobilityManager
 	{
-		[SerializeField] private float dashForce;
-		[SerializeField] private float duration;
-		[SerializeField] private float cooldown;
+		[SerializeField] float cooldown;
+		[SerializeField] float duration;
 
-		private Rigidbody2D _rb;
-		private bool _inCooldown;
+		MoveController _moveController;
+		JumpController _jumpController;
 
-		public bool IsDashing { get; private set; }
 
-		private void Start() { _rb = GetComponent<Rigidbody2D>(); }
-
-		public void RealizeDash()
+		protected override void Awake()
 		{
-			if (_inCooldown) return;
-
-			StartCoroutine(DashRoutine());
-			_rb.AddForce(_rb.transform.right * dashForce, ForceMode2D.Impulse);
+			base.Awake();
+			_moveController = GetComponent<MoveController>();
+			_jumpController = GetComponent<JumpController>();
 		}
 
-		private IEnumerator DashRoutine()
+		public void Dash()
 		{
-			IsDashing = _inCooldown = true;
+			if (!Enabled) return;
+
+			StartCoroutine(Cooldown());
+			Rigidbody2D.AddForceX(transform.right.x * force, ForceMode2D.Impulse);
+		}
+
+		IEnumerator Cooldown()
+		{
+			Enabled = false;
+			_moveController.Enabled = _jumpController.Enabled = false;
 
 			yield return new WaitForSeconds(duration);
 
-			IsDashing = false;
+			_moveController.Enabled = _jumpController.Enabled = true;
 
 			yield return new WaitForSeconds(cooldown - duration);
 
-			_inCooldown = false;
+			Enabled = true;
 		}
 	}
 }
