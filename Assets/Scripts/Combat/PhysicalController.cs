@@ -1,20 +1,23 @@
-﻿using Prefab;
+using System;
+using Prefab.Physical;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Combat
 {
-	public class PhysicalController: CombatManager
+	[Serializable] public class PhysicalController: CombatManager
 	{
-		[SerializeField] float force;
-		AttackController _controller;
+		[Header("Physical")]
+		public float pushForce;
 
-		public void Attack(string typeAttack)
+		public void Attack(string typeOfAttack, Action coroutine)
 		{
-			if (CheckCooldown) return;
+			if (!Enabled) return;
 
-			StartCoroutine(Cooldown());
-			GameObject attack = Instantiate(Resources.Load<GameObject>(PREFAB_ROUTE + typeAttack));
-			if (attack.TryGetComponent(out _controller)) _controller.SetParameters(character, damage * Multiplier, force, duration);
+			coroutine.Invoke();
+			GameObject prefab = Object.Instantiate(Resources.Load<GameObject>(PREFAB_ROUTE + typeOfAttack));
+			prefab.TryGetComponent(out NormalAttack controller);
+			controller.SetParameters(Character, damage * Multiplier, pushForce, prefabDuration);
 		}
 	}
 }

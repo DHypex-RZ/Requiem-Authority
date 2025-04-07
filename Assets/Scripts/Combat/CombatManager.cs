@@ -1,31 +1,31 @@
-﻿using System.Collections;
+using System.Collections;
 using Character;
 using UnityEngine;
 
 namespace Combat
 {
-	[RequireComponent(typeof(CharacterManager))]
-	public abstract class CombatManager: MonoBehaviour
+	public abstract class CombatManager
 	{
-		protected const string PREFAB_ROUTE = "Prefabs/Combat/";
-		[SerializeField] protected float damage;
-		[SerializeField] float cooldown;
-		[SerializeField] protected float duration;
-		public float Multiplier { get; set; } = 1f;
-		protected CharacterManager character;
-		public bool CheckCooldown { get; set; }
+		protected internal const string PREFAB_ROUTE = "Prefabs/Combat/";
+		public CharacterManager Character { get; set; }
 
 
-		protected virtual void Awake() { character = GetComponent<CharacterManager>(); }
+		[Header("Combat")]
+		public float damage;
 
+		public float cooldown;
+		public float prefabDuration;
 
-		private protected IEnumerator Cooldown()
+		public float Multiplier { get; set; } = 1;
+		public bool Enabled { get; set; } = true;
+
+		public IEnumerator Cooldown()
 		{
-			CheckCooldown = true;
+			Enabled = false;
 
 			yield return new WaitForSeconds(cooldown);
 
-			CheckCooldown = false;
+			Enabled = true;
 		}
 	}
 }

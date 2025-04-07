@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6856562677652212234}
   - component: {fileID: 4368258449209355771}
-  - component: {fileID: 1433508921164765937}
   - component: {fileID: 8506082428584706281}
   - component: {fileID: 5921261861988807080}
+  - component: {fileID: 843789303092025839}
   m_Layer: 6
   m_Name: PushBullet
   m_TagString: Untagged
@@ -90,18 +90,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1433508921164765937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3079751088240261816}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1602f3df9054ea389bbd0df7b6bbe0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &8506082428584706281
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -175,3 +163,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &843789303092025839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3079751088240261816}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 823a34d4131341808b9b85b9f090c62a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

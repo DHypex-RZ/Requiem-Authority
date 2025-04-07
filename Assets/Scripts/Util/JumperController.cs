@@ -1,17 +1,18 @@
-using Health;
-using Mobility;
+﻿using Character.Enemy;
+using Character.Player;
+using Prefab.Shield;
 using UnityEngine;
-using static Health.HealthState;
+using static Health.State;
 
 namespace Util
 {
-	[RequireComponent(typeof(Collider2D))]
+	[RequireComponent(typeof(BoxCollider2D))]
 	public class JumperController: MonoBehaviour
 	{
 		[SerializeField] float jumpForce;
-		[SerializeField] HealthController activator;
+		[SerializeField] EnemyManager activator;
 
-		MoveController _player;
+		PlayerController _player;
 		SpriteRenderer _sprite;
 		Collider2D _collider;
 
@@ -19,7 +20,7 @@ namespace Util
 		{
 			_collider = GetComponent<Collider2D>();
 			_sprite = GetComponent<SpriteRenderer>();
-			_player = GameObject.FindWithTag("Player").GetComponent<MoveController>();
+			_player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
 		}
 
 		void Start()
@@ -32,7 +33,7 @@ namespace Util
 
 		void Update()
 		{
-			if (!activator || activator.State == Alive) return;
+			if (!activator || activator.HealthController.State == Alive) return;
 
 			_sprite.color = Color.green;
 			_collider.enabled = true;
@@ -41,9 +42,18 @@ namespace Util
 
 		void OnTriggerEnter2D(Collider2D other)
 		{
+			if (other.TryGetComponent(out ShieldController shield)) Destroy(shield.gameObject);
+
+			if (other.TryGetComponent(out EnemyManager enemy))
+			{
+				activator = enemy;
+				Start();
+			}
+
 			if (!other.CompareTag("Player")) return;
 
-			_player.Rigidbody2D.AddForce(_player.Rigidbody2D.transform.up * jumpForce, ForceMode2D.Impulse);
+			_player.MovementController.Rigidbody.linearVelocity = Vector2.zero;
+			_player.MovementController.Rigidbody.AddForceY(_player.transform.up.y * jumpForce, ForceMode2D.Impulse);
 		}
 	}
 }

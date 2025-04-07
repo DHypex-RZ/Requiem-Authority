@@ -1,34 +1,43 @@
-﻿using Health;
-using Mobility;
+using Health;
+using Movement;
 using UnityEngine;
-using static Health.HealthState;
+using static Health.State;
 
 namespace Character
 {
-	[RequireComponent(typeof(HealthController), typeof(MoveController), typeof(JumpController))]
-	public class CharacterManager: MonoBehaviour
+	public abstract class CharacterManager: MonoBehaviour
 	{
-		public HealthController HealthController { get; private set; }
-		public MoveController MoveController { get; private set; }
-		public JumpController JumpController { get; private set; }
-		protected Animator Animator { get; private set; }
 		public bool Enabled { get; set; } = true;
 
+		[SerializeField] HealthController healthController;
+		[SerializeField] MovementController movementController;
+
+		public HealthController HealthController => healthController;
+		public MovementController MovementController => movementController;
 
 		protected virtual void Awake()
 		{
-			HealthController = GetComponent<HealthController>();
-			MoveController = GetComponent<MoveController>();
-			JumpController = GetComponent<JumpController>();
-			Animator = GetComponent<Animator>();
+			MovementController.Rigidbody = GetComponent<Rigidbody2D>();
+			HealthController.CurrentHealth = HealthController.health;
 		}
 
 		protected virtual void Update()
 		{
-			if (HealthController.State == Alive) return;
+			if (HealthController.State == Dead)
+			{
+				movementController.Rigidbody.linearVelocityX = Vector2.zero.x;
+				movementController.Enabled = false;
 
-			gameObject.layer = LayerMask.NameToLayer("DeadZone");
-			enabled = false;
+				gameObject.layer = LayerMask.NameToLayer("DeadZone");
+				Enabled = false;
+
+				return;
+			}
+
+			movementController.IsGrounded = Physics2D.Raycast(transform.position, Vector2.down, movementController.groundCheckDistance, LayerMask.GetMask("Ground"));
+			#if UNITY_EDITOR
+			Debug.DrawRay(transform.position, Vector2.down * movementController.groundCheckDistance, Color.yellow);
+			#endif
 		}
 	}
 }

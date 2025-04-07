@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Character;
 using UnityEngine;
 
@@ -23,7 +23,7 @@ namespace Prefab
 			Destroy(gameObject, 10);
 		}
 
-		public void SetParameters(CharacterManager parent, float duration)
+		protected void SetParameters(CharacterManager parent, float duration)
 		{
 			Parent = parent;
 			Duration = duration;

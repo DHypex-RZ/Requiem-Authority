@@ -5,11 +5,11 @@ namespace Character.Enemy
 {
 	public abstract class EnemyManager: CharacterManager
 	{
-		[SerializeField] protected float detectionDistance;
-		protected EnemyState State { get; set; }
+		protected State State { get; set; }
+		[Header("Enemy")] [SerializeField] protected float detectionDistance;
 		Transform _target;
-		protected Vector3 TargetPosition { get; private set; }
-		protected Quaternion TargetRotation { get; private set; }
+		protected Vector2 Position { get; private set; }
+		protected Quaternion Rotation { get; private set; }
 		protected float Direction { get; set; }
 		protected RaycastHit2D Hit { get; private set; }
 		Image _healthBar;
@@ -17,26 +17,30 @@ namespace Character.Enemy
 		protected override void Awake()
 		{
 			base.Awake();
-			_target = GameObject.FindWithTag("Player").transform;
-			_healthBar = transform.Find("HealthBar").Find("Health").GetComponent<Image>();
+			_target = GameObject.FindGameObjectWithTag("Player").transform;
+			Canvas canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Util/HealthBar"), transform, false);
+			_healthBar = canvas.transform.Find("Health").GetComponent<Image>();
 		}
 
 		protected override void Update()
 		{
 			base.Update();
 
-			TargetPosition = _target.position - transform.position;
-			TargetRotation = Quaternion.Euler(0, 0, Mathf.Atan2(TargetPosition.y, TargetPosition.x) * Mathf.Rad2Deg);
-			Direction = TargetPosition.x switch { < -1 => -1, > 1 => 1, _ => 0 };
-			Hit = Physics2D.Raycast(transform.position, TargetPosition, detectionDistance);
-			_healthBar.fillAmount = HealthController.CurrentHealth / HealthController.Health;
+			_healthBar.fillAmount = HealthController.CurrentHealth / HealthController.health;
+
+			if (!Enabled) return;
+
+			Position = _target.position - transform.position;
+			Rotation = Quaternion.Euler(0, 0, Mathf.Atan2(Position.y, Position.x) * Mathf.Rad2Deg);
+			Direction = Position.x switch { < -1 => -1, > 1 => 1, _ => 0 };
+			Hit = Physics2D.Raycast(transform.position, Position, detectionDistance, LayerMask.GetMask("Level"));
 			#if UNITY_EDITOR
-			Debug.DrawRay(transform.position, TargetPosition, Color.red);
+			Debug.DrawRay(transform.position, Position, Color.red);
 			#endif
 		}
 
-		protected abstract EnemyState Behaviour();
+		protected abstract State Behaviour();
 	}
 
-	public enum EnemyState { InPatrol, InGuard, InAlert, InDanger }
+	public enum State { InPatrol, InGuard, InAlert, InDanger }
 }

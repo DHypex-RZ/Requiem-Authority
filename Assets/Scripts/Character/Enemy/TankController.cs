@@ -1,42 +1,39 @@
 ﻿using Combat;
 using UnityEngine;
-using static Character.Enemy.EnemyState;
-using static Health.HealthState;
+using static Character.Enemy.State;
+using static Health.State;
 
 namespace Character.Enemy
 {
+	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
 	public class TankController: EnemyManager
 	{
 		[SerializeField] float attackDistance;
 		[SerializeField] EnemyManager enemyProtected;
-		PhysicalController PhysicalController { get; set; }
+		[SerializeField] PhysicalController physicalController;
 
 		protected override void Awake()
 		{
 			base.Awake();
-			PhysicalController = GetComponent<PhysicalController>();
+			physicalController.Character = GetComponent<TankController>();
 		}
 
 		protected override void Update()
 		{
 			base.Update();
+
+			if (!Enabled) return;
+
 			State = Behaviour();
 
-			if (!Enabled) return;
-
-			if (Mathf.Abs(TargetPosition.x) < attackDistance) PhysicalController.Attack("Attack");
+			if (Mathf.Abs(Position.x) < attackDistance) physicalController.Attack("Attack", () => StartCoroutine(physicalController.Cooldown()));
 		}
 
-		void FixedUpdate()
-		{
-			if (!Enabled) return;
+		void FixedUpdate() { MovementController.Move(Direction, State == InDanger && Hit && Hit.collider.tag is "Player" or "Shield"); }
 
-			MoveController.Move(Direction, State == InDanger);
-		}
-
-		protected override EnemyState Behaviour()
+		protected override State Behaviour()
 		{
-			if (Mathf.Abs(TargetPosition.x) > detectionDistance) return InGuard;
+			if (Mathf.Abs(Position.x) > detectionDistance) return InGuard;
 
 			if (enemyProtected) return enemyProtected.HealthController.State == Dead ? InDanger : InGuard;
 

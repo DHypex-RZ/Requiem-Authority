@@ -1,31 +1,36 @@
-﻿using Prefab;
+using System;
+using Prefab.Range;
 using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace Combat
 {
-	public class RangeController: CombatManager
+	[Serializable] public class RangeController: CombatManager
 	{
-		[SerializeField] float speed;
-		[SerializeField] float dispersion;
-		[SerializeField] bool surpass;
-		Transform _origin;
-		BulletController _controller;
+		[Header("Range")]
+		public Transform origin;
 
-		protected override void Awake()
+		public float speed;
+		public float dispersion;
+		public bool surpass;
+
+		public void Shoot(string typeOfBullet, Quaternion rotation, Action coroutine)
 		{
-			base.Awake();
-			_origin = transform.Find("Projectile Origin");
+			if (!Enabled) return;
+
+			coroutine.Invoke();
+
+			GameObject prefab = Object.Instantiate(
+				Resources.Load<GameObject>(PREFAB_ROUTE + typeOfBullet),
+				origin.position,
+				rotation * Quaternion.Euler(0, 0, Random.Range(-dispersion, dispersion))
+			);
+
+			prefab.TryGetComponent(out NormalBullet controller);
+			controller.SetParameters(Character, damage * Multiplier, speed, surpass, prefabDuration);
 		}
 
-		public void Shoot(string typeProjectile, Quaternion rotation)
-		{
-			if (CheckCooldown) return;
-
-			StartCoroutine(Cooldown());
-			GameObject shoot = Instantiate(Resources.Load<GameObject>(PREFAB_ROUTE + typeProjectile), _origin.position, rotation * Quaternion.Euler(0, 0, Random.Range(-dispersion, dispersion)));
-			if (shoot.TryGetComponent(out _controller)) _controller.SetParameters(character, damage * Multiplier, speed, surpass, duration);
-		}
-
-		public void Shoot(string typeProjectile) { Shoot(typeProjectile, _origin.rotation); }
+		public void Shoot(string typeProjectile, Action coroutine) { Shoot(typeProjectile, origin.rotation, coroutine); }
 	}
 }

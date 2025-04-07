@@ -1,31 +1,23 @@
-﻿using UnityEngine;
-using static Health.HealthState;
+using System;
+using static Health.State;
 
 namespace Health
 {
-	public class HealthController: MonoBehaviour
+	[Serializable] public class HealthController
 	{
-		[SerializeField] float health;
-		public float Health => health;
-		public float CurrentHealth { get; private set; }
-		public HealthState State { get; private set; } = Alive;
+		public float health;
 
-		void Awake() { CurrentHealth = health; }
+		public float CurrentHealth { get; set; }
+		public State State { get; set; } = Alive;
 
-		public void Awake(float newHealth)
-		{
-			health = newHealth;
-			Awake();
-		}
-
-		public void Damage(float damage)
+		public void TakeDamage(float damage)
 		{
 			CurrentHealth -= damage;
-			State = CurrentHealth <= 0 ? Dead : Alive;
+			if (CurrentHealth <= 0) State = Dead;
 		}
 
 		public void Heal(float heal) { CurrentHealth = CurrentHealth + heal > health ? health : CurrentHealth + heal; }
 	}
 
-	public enum HealthState { Alive, Dead }
+	public enum State { Alive, Dead }
 }

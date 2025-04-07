@@ -1,100 +1,141 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using Combat;
-using Mobility;
+using Movement;
+using Prefab.Shield;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Health.HealthState;
+using static Health.State;
 using static UnityEngine.Input;
 using static UnityEngine.KeyCode;
 
 namespace Character.Player
 {
+	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(Animator))]
 	public class PlayerController: CharacterManager
 	{
-		[SerializeField] float healingAmount;
-		[SerializeField] float abilityQCooldown;
-		[SerializeField] AbilityController[] abilities;
+		[SerializeField] DashController dashController;
+		[SerializeField] PhysicalController physicalController;
+		[SerializeField] RangeController rangeController;
 
-		DashController DashController { get; set; }
-		PhysicalController PhysicalController { get; set; }
-		RangeController RangeController { get; set; }
-		ProtectionController ProtectionController { get; set; }
-		public AbilityController[] Abilities => abilities;
+		Animator _animator;
+
+		[Header("Ability parameters")]
+		[Header("First ability")] [SerializeField]
+		float healAmount;
+
+		[Header("First ability")] [SerializeField]
+		float attackMultiplier;
+
+		[Header("Third ability")] [SerializeField]
+		float shieldHealth;
+
+		[Tooltip("Assigned for third ability")] [SerializeField]
+		float shieldDuration;
+
+		[Header("Fourth ability")] [SerializeField]
+		float bulletMultiplier;
+
+		[SerializeField] Ability[] abilities;
+
+		public PhysicalController PhysicalController => physicalController;
+		public Ability[] Abilities => abilities;
 
 		protected override void Awake()
 		{
 			base.Awake();
-			DashController = GetComponent<DashController>();
-			PhysicalController = GetComponent<PhysicalController>();
-			RangeController = GetComponent<RangeController>();
-			ProtectionController = GetComponent<ProtectionController>();
-		}
+			PlayerController controller = GetComponent<PlayerController>();
 
-		void Start() { base.Update(); }
+			dashController.MovementController = MovementController;
+			physicalController.Character = rangeController.Character = controller;
+			_animator = GetComponent<Animator>();
+
+			abilities[0].Action = () => HealthController.Heal(healAmount);
+
+			abilities[1].Action = () =>
+			{
+				PhysicalController.Multiplier = 1.35f;
+				PhysicalController.Enabled = true;
+				PhysicalController.Attack("PushUpAttack", () => StartCoroutine(physicalController.Cooldown()));
+			};
+
+			abilities[2].Action = () =>
+			{
+				GameObject prefab = Instantiate(Resources.Load<GameObject>(CombatManager.PREFAB_ROUTE + "Shield"));
+				prefab.TryGetComponent(out ShieldController shield);
+				shield.SetParameters(controller, shieldHealth, shieldDuration);
+			};
+
+			abilities[3].Action = () =>
+			{
+				rangeController.Multiplier = .5f;
+				rangeController.Enabled = true;
+				rangeController.Shoot("ParalyzeBullet", () => StartCoroutine(rangeController.Cooldown()));
+			};
+		}
 
 		protected override void Update()
 		{
 			base.Update();
 
-			if (HealthController.State == Dead || GetKeyDown(Escape)) StartCoroutine(ReturnToMenu());
+			if (HealthController.State == Dead) StartCoroutine(GoMenu());
 
 			if (!Enabled) return;
 
-			Animator.SetBool("move", GetAxisRaw("Horizontal") != 0 && JumpController.IsGrounded);
-			Animator.SetFloat("running", GetKey(LeftShift) ? 1.65f : 1);
+			MovementController.Move(GetAxisRaw("Horizontal"), GetKey(LeftShift));
+			if (GetKeyDown(KeyCode.Space)) MovementController.Jump();
+			if (GetKeyDown(LeftControl)) dashController.Dash(() => StartCoroutine(dashController.Cooldown()));
 
 			if (GetMouseButton(0))
 			{
-				RangeController.Multiplier = 1f;
-				RangeController.Shoot("Bullet");
+				rangeController.Multiplier = 1f;
+				rangeController.Shoot("Bullet", () => StartCoroutine(rangeController.Cooldown()));
 			}
 			else if (GetMouseButton(1))
 			{
-				PhysicalController.Multiplier = 1f;
-				PhysicalController.Attack("Attack");
+				physicalController.Multiplier = 1f;
+				physicalController.Attack("Attack", () => StartCoroutine(physicalController.Cooldown()));
 			}
 
-			foreach (AbilityController ability in abilities)
-				if (GetKey(ability.key) && !ability.InCooldown)
-					switch (ability.key)
-					{
-						case Q:
-							StartCoroutine(ability.Cooldown());
-							HealthController.Heal(healingAmount);
+			foreach (Ability ability in abilities)
+				if (GetKeyDown(ability.assignedKey))
+					ability.RealizeAbility(() => StartCoroutine(ability.Cooldown()));
 
-							break;
-						case W:
-							StartCoroutine(ability.Cooldown());
-							PhysicalController.Multiplier = 1.35f;
-							PhysicalController.CheckCooldown = false;
-							PhysicalController.Attack("SpecialAttack");
-
-							break;
-						case E:
-							StartCoroutine(ability.Cooldown());
-							ProtectionController.Protect("Shield");
-
-							break;
-						case R:
-							StartCoroutine(ability.Cooldown());
-							RangeController.Multiplier = .5f;
-							RangeController.CheckCooldown = false;
-							RangeController.Shoot("SleepBullet");
-							RangeController.CheckCooldown = true;
-
-							break;
-					}
-
-			MoveController.Move(GetAxisRaw("Horizontal"), GetKey(LeftShift));
-			if (GetKeyDown(KeyCode.Space)) JumpController.Jump();
-			if (GetKey(LeftControl)) DashController.Dash();
+			_animator.SetBool("move", GetAxisRaw("Horizontal") != 0 && MovementController.IsGrounded);
+			_animator.SetFloat("running", GetKey(LeftShift) ? 1.5f : 1);
 		}
 
-		IEnumerator ReturnToMenu()
+		static IEnumerator GoMenu()
 		{
-			yield return new WaitForSeconds(1);
+			yield return new WaitForSeconds(0.15f);
 
 			SceneManager.LoadScene("Menu");
+		}
+	}
+
+	[Serializable] public class Ability
+	{
+		public float cooldown;
+		public KeyCode assignedKey;
+		public Action Action { get; set; }
+		public bool Enabled { get; set; } = true;
+
+		public void RealizeAbility(Action coroutine)
+		{
+			if (!Enabled) return;
+
+			coroutine.Invoke();
+			Action.Invoke();
+		}
+
+
+		public IEnumerator Cooldown()
+		{
+			Enabled = false;
+
+			yield return new WaitForSeconds(cooldown);
+
+			Enabled = true;
 		}
 	}
 }

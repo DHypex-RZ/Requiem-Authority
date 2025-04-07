@@ -1,19 +1,19 @@
-﻿using Combat;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Character.Player
+namespace Character.Player.Animation
 {
+	[RequireComponent(typeof(Animator))]
 	public class SwordAnimator: MonoBehaviour
 	{
-		PhysicalController _controller;
+		PlayerController _controller;
 		Animator _animator;
 
 		void Awake()
 		{
 			_animator = GetComponent<Animator>();
-			_controller = transform.parent.GetComponent<PhysicalController>();
+			_controller = transform.parent.GetComponent<PlayerController>();
 		}
 
-		void FixedUpdate() { _animator.SetBool("attack", _controller.CheckCooldown); }
+		void Update() { _animator.SetBool("attack", !_controller.PhysicalController.Enabled); }
 	}
 }

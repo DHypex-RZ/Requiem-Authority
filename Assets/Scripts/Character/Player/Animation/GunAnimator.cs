@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using static UnityEngine.Input;
 
-namespace Character.Player
+namespace Character.Player.Animation
 {
+	[RequireComponent(typeof(Animator))]
 	public class GunAnimator: MonoBehaviour
 	{
 		Animator _animator;
 		void Awake() { _animator = GetComponent<Animator>(); }
-		void FixedUpdate() { _animator.SetBool("shoot", GetMouseButton(0)); }
+		void Update() { _animator.SetBool("shoot", GetMouseButton(0)); }
 	}
 }

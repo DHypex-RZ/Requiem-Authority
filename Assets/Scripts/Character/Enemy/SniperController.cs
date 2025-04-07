@@ -1,29 +1,31 @@
 ﻿using Combat;
 using UnityEngine;
-using static Character.Enemy.EnemyState;
+using static Character.Enemy.State;
 
 namespace Character.Enemy
 {
-	public class SniperController: EnemyManager
+	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
+	public class SniperController: EnemyManager // TODO: arreglar movimiento en general
 	{
 		[SerializeField] float platformLimitDistance;
+		[SerializeField] RangeController rangeController;
 		float _initialPosition;
 		int _platformDirection = 1;
-		RangeController RangeController { get; set; }
 
 		protected override void Awake()
 		{
 			base.Awake();
-			RangeController = GetComponent<RangeController>();
+			rangeController.Character = GetComponent<SniperController>();
 			_initialPosition = transform.position.x;
 		}
 
 		protected override void Update()
 		{
 			base.Update();
-			State = Behaviour();
 
 			if (!Enabled) return;
+
+			State = Behaviour();
 
 			if (transform.position.x >= _initialPosition + platformLimitDistance) _platformDirection = -1;
 			else if (transform.position.x <= _initialPosition - platformLimitDistance) _platformDirection = 1;
@@ -35,8 +37,8 @@ namespace Character.Enemy
 
 			if (!Hit || Hit.collider.CompareTag("Ground")) return;
 
-			RangeController.Multiplier = State == InDanger ? 1.5f : 1f;
-			RangeController.Shoot(State == InDanger ? "PushBullet" : "Bullet", TargetRotation);
+			rangeController.Multiplier = State == InDanger ? 1.5f : 1f;
+			rangeController.Shoot(State == InDanger ? "PushBullet" : "Bullet", Rotation, () => StartCoroutine(rangeController.Cooldown()));
 		}
 
 
@@ -44,16 +46,16 @@ namespace Character.Enemy
 		{
 			if (!Enabled) return;
 
-			MoveController.Move(State switch { InPatrol => _platformDirection, InAlert => Direction, _ => 0 });
+			MovementController.Move(State switch { InPatrol => _platformDirection, InAlert => Direction, _ => 0 });
 		}
 
-		protected override EnemyState Behaviour()
+		protected override State Behaviour()
 		{
-			float targetDistance = Mathf.Abs(TargetPosition.x);
-
-			if (targetDistance > detectionDistance) return InPatrol;
-
-			return targetDistance < detectionDistance * 0.3f ? InDanger : InAlert;
+			return Mathf.Abs(Position.x) > detectionDistance
+					   ? InPatrol
+					   : Mathf.Abs(Position.x) <= platformLimitDistance * 2
+						   ? InDanger
+						   : InAlert;
 		}
 	}
 }
