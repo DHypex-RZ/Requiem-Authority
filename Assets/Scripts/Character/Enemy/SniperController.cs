@@ -5,7 +5,7 @@ using static Character.Enemy.State;
 namespace Character.Enemy
 {
 	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
-	public class SniperController: EnemyManager // TODO: arreglar movimiento en general
+	public class SniperController: EnemyManager
 	{
 		[SerializeField] float platformLimitDistance;
 		[SerializeField] RangeController rangeController;
@@ -38,7 +38,7 @@ namespace Character.Enemy
 			if (!Hit || Hit.collider.CompareTag("Ground")) return;
 
 			rangeController.Multiplier = State == InDanger ? 1.5f : 1f;
-			rangeController.Shoot(State == InDanger ? "PushBullet" : "Bullet", Rotation, () => StartCoroutine(rangeController.Cooldown()));
+			rangeController.Shoot(State == InDanger ? "PushBullet" : "Bullet", Rotation);
 		}
 
 

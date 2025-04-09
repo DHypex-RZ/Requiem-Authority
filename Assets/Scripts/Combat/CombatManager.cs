@@ -1,4 +1,3 @@
-using System.Collections;
 using Character;
 using UnityEngine;
 
@@ -19,12 +18,10 @@ namespace Combat
 		public float Multiplier { get; set; } = 1;
 		public bool Enabled { get; set; } = true;
 
-		public IEnumerator Cooldown()
+		protected async Awaitable Cooldown()
 		{
 			Enabled = false;
-
-			yield return new WaitForSeconds(cooldown);
-
+			await Awaitable.WaitForSecondsAsync(cooldown);
 			Enabled = true;
 		}
 	}

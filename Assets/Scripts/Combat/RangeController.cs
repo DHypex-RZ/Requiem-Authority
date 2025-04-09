@@ -15,11 +15,9 @@ namespace Combat
 		public float dispersion;
 		public bool surpass;
 
-		public void Shoot(string typeOfBullet, Quaternion rotation, Action coroutine)
+		public void Shoot(string typeOfBullet, Quaternion rotation)
 		{
 			if (!Enabled) return;
-
-			coroutine.Invoke();
 
 			GameObject prefab = Object.Instantiate(
 				Resources.Load<GameObject>(PREFAB_ROUTE + typeOfBullet),
@@ -29,8 +27,9 @@ namespace Combat
 
 			prefab.TryGetComponent(out NormalBullet controller);
 			controller.SetParameters(Character, damage * Multiplier, speed, surpass, prefabDuration);
+			_ = Cooldown();
 		}
 
-		public void Shoot(string typeProjectile, Action coroutine) { Shoot(typeProjectile, origin.rotation, coroutine); }
+		public void Shoot(string typeProjectile) { Shoot(typeProjectile, origin.rotation); }
 	}
 }

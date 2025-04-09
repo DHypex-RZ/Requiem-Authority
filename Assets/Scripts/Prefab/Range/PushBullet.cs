@@ -16,8 +16,9 @@ namespace Prefab.Range
 
 			if (other.TryGetComponent(out CharacterManager character))
 			{
+				Instantiate(particle, transform.position, Quaternion.identity);
 				character.HealthController.TakeDamage(Damage);
-				DisablePrefab();
+				_ = DisablePrefab();
 				StartCoroutine(Push(character.MovementController));
 			}
 		}

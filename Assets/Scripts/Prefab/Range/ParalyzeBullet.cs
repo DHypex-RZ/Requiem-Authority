@@ -13,8 +13,9 @@ namespace Prefab.Range
 
 			if (other.TryGetComponent(out CharacterManager character))
 			{
+				Instantiate(particle, character.transform, false);
 				character.HealthController.TakeDamage(Damage);
-				DisablePrefab();
+				_ = DisablePrefab();
 				StartCoroutine(Sleep(character));
 			}
 		}
@@ -26,6 +27,7 @@ namespace Prefab.Range
 
 			yield return new WaitForSeconds(2);
 
+			particle.Stop();
 			character.MovementController.Enabled = character.Enabled = true;
 			Destroy(gameObject);
 		}

@@ -13,6 +13,7 @@ namespace Prefab.Physical
 
 			if (other.TryGetComponent(out CharacterManager character))
 			{
+				Instantiate(particle, transform.position, particle.transform.rotation);
 				character.HealthController.TakeDamage(Damage);
 				StartCoroutine(PushUp(character));
 			}
@@ -20,6 +21,7 @@ namespace Prefab.Physical
 
 		IEnumerator PushUp(CharacterManager character)
 		{
+			const float parentJumpForce = 8.35f;
 			const float forceMultiplier = 1.5f;
 			Parent.MovementController.jumpForce *= forceMultiplier;
 			character.MovementController.Rigidbody.linearVelocity = Vector2.zero;
@@ -29,7 +31,7 @@ namespace Prefab.Physical
 			yield return new WaitForSeconds(0.15f);
 			yield return new WaitUntil(() => character.MovementController.IsGrounded);
 
-			Parent.MovementController.jumpForce /= forceMultiplier;
+			Parent.MovementController.jumpForce = parentJumpForce;
 			character.MovementController.Enabled = character.Enabled = true;
 			Destroy(gameObject);
 		}

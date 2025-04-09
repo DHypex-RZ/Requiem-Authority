@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace Movement
@@ -14,23 +13,23 @@ namespace Movement
 		public float cooldown;
 		public float duration;
 
-		public void Dash(Action coroutine)
+		public void Dash()
 		{
 			if (!Enabled) return;
 
-			coroutine.Invoke();
+			Cooldown();
 			MovementController.Rigidbody.AddForceX(MovementController.Rigidbody.transform.right.x * dashForce, ForceMode2D.Impulse);
 		}
 
-		public IEnumerator Cooldown()
+		async void Cooldown()
 		{
 			Enabled = MovementController.Enabled = false;
 
-			yield return new WaitForSeconds(duration);
+			await Awaitable.WaitForSecondsAsync(duration);
 
 			MovementController.Enabled = true;
 
-			yield return new WaitForSeconds(cooldown);
+			await Awaitable.WaitForSecondsAsync(cooldown - duration);
 
 			Enabled = true;
 		}

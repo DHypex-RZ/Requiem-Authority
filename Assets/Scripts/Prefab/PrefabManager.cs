@@ -1,4 +1,3 @@
-using System.Collections;
 using Character;
 using UnityEngine;
 
@@ -6,20 +5,21 @@ namespace Prefab
 {
 	public abstract class PrefabManager: MonoBehaviour
 	{
+		Collider2D _col;
 		SpriteRenderer _sprite;
-		Collider2D _collider;
 		public CharacterManager Parent { get; set; }
 		float Duration { get; set; }
 
-		protected virtual void Awake()
+
+		void Awake()
 		{
-			_collider = GetComponent<Collider2D>();
 			_sprite = GetComponent<SpriteRenderer>();
+			_col = GetComponent<Collider2D>();
 		}
 
 		protected virtual void Start()
 		{
-			StartCoroutine(Disable());
+			_ = DisablePrefab(Duration);
 			Destroy(gameObject, 10);
 		}
 
@@ -29,17 +29,12 @@ namespace Prefab
 			Duration = duration;
 		}
 
-		protected void DisablePrefab()
+		protected async Awaitable DisablePrefab(float waitTime = 0)
 		{
+			await Awaitable.WaitForSecondsAsync(waitTime);
+			_col.enabled = false;
 			_sprite.enabled = false;
-			_collider.enabled = false;
-		}
-
-		IEnumerator Disable()
-		{
-			yield return new WaitForSeconds(Duration);
-
-			DisablePrefab();
+			gameObject.layer = LayerMask.NameToLayer("DeadZone");
 		}
 	}
 }

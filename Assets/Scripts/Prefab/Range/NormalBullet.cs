@@ -7,6 +7,8 @@ namespace Prefab.Range
 	[RequireComponent(typeof(Collider2D), typeof(Rigidbody2D))]
 	public class NormalBullet: PrefabManager
 	{
+		[SerializeField] protected ParticleSystem particle;
+
 		protected float Damage { get; private set; }
 		internal float Speed { get; private set; }
 		internal bool Surpass { get; set; }
@@ -29,20 +31,22 @@ namespace Prefab.Range
 		{
 			if ((Surpass && Parent.CompareTag(other.tag)) || Parent.gameObject == other.gameObject) return;
 
-			if (other.CompareTag("Ground")) Destroy(gameObject);
+			if (other.CompareTag("Ground")) _ = DisablePrefab();
 
 			if (other.TryGetComponent(out ShieldController shield))
 			{
 				if (Parent.CompareTag("Player")) return;
 
+				Instantiate(particle, transform.position, Quaternion.identity);
 				shield.HealthController.TakeDamage(Damage);
-				Destroy(gameObject);
+				_ = DisablePrefab();
 			}
 
 			if (other.TryGetComponent(out CharacterManager character))
 			{
+				Instantiate(particle, transform.position, Quaternion.identity);
 				character.HealthController.TakeDamage(Damage);
-				Destroy(gameObject);
+				_ = DisablePrefab();
 			}
 		}
 	}

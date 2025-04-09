@@ -44,12 +44,6 @@ namespace Util
 		{
 			if (other.TryGetComponent(out ShieldController shield)) Destroy(shield.gameObject);
 
-			if (other.TryGetComponent(out EnemyManager enemy))
-			{
-				activator = enemy;
-				Start();
-			}
-
 			if (!other.CompareTag("Player")) return;
 
 			_player.MovementController.Rigidbody.linearVelocity = Vector2.zero;

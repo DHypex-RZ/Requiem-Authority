@@ -35,7 +35,7 @@ namespace Character.Enemy
 				_ => 1f
 			};
 
-			rangeController.Shoot("Bullet", Rotation, () => StartCoroutine(rangeController.Cooldown()));
+			rangeController.Shoot("Bullet", Rotation);
 		}
 
 		void FixedUpdate()

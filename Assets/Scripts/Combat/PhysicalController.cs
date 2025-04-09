@@ -10,14 +10,14 @@ namespace Combat
 		[Header("Physical")]
 		public float pushForce;
 
-		public void Attack(string typeOfAttack, Action coroutine)
+		public void Attack(string typeOfAttack)
 		{
 			if (!Enabled) return;
 
-			coroutine.Invoke();
 			GameObject prefab = Object.Instantiate(Resources.Load<GameObject>(PREFAB_ROUTE + typeOfAttack));
 			prefab.TryGetComponent(out NormalAttack controller);
 			controller.SetParameters(Character, damage * Multiplier, pushForce, prefabDuration);
+			_ = Cooldown();
 		}
 	}
 }

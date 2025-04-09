@@ -2,6 +2,7 @@ using System.Collections;
 using Character;
 using Movement;
 using Prefab.Range;
+using Prefab.Shield;
 using UnityEngine;
 
 namespace Prefab.Physical
@@ -9,6 +10,7 @@ namespace Prefab.Physical
 	[RequireComponent(typeof(Collider2D))]
 	public class NormalAttack: PrefabManager
 	{
+		[SerializeField] protected ParticleSystem particle;
 		protected float Damage { get; private set; }
 		protected float Force { get; private set; }
 
@@ -31,16 +33,26 @@ namespace Prefab.Physical
 
 			if (other.TryGetComponent(out NormalBullet bullet))
 			{
+				if (bullet.Parent == Parent) return;
+
+				Instantiate(particle, bullet.transform.position, Quaternion.identity);
 				bullet.Surpass = false;
 				bullet.Parent = Parent;
 				bullet.GetComponent<SpriteRenderer>().flipX = true;
 				bullet.GetComponent<Rigidbody2D>().linearVelocity = bullet.transform.right * -bullet.Speed;
 			}
 
+			if (other.TryGetComponent(out ShieldController shield))
+			{
+				if (shield.Parent == Parent) Destroy(other.gameObject);
+
+				shield.HealthController.TakeDamage(Damage);
+			}
+
 			if (other.TryGetComponent(out CharacterManager character))
 			{
+				Instantiate(particle, transform.position, Quaternion.identity);
 				character.HealthController.TakeDamage(Damage);
-				DisablePrefab();
 				StartCoroutine(Push(character.MovementController));
 			}
 		}

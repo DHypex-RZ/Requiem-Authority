@@ -1,10 +1,9 @@
 using System;
-using System.Collections;
 using Combat;
+using Game.Level;
 using Movement;
 using Prefab.Shield;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using static Health.State;
 using static UnityEngine.Input;
 using static UnityEngine.KeyCode;
@@ -37,12 +36,14 @@ namespace Character.Player
 		float bulletMultiplier;
 
 		[SerializeField] Ability[] abilities;
+		LevelController _levelController;
 
 		public PhysicalController PhysicalController => physicalController;
 		public Ability[] Abilities => abilities;
 
 		protected override void Awake()
 		{
+			_levelController = GameObject.FindWithTag("GameController").GetComponent<LevelController>();
 			base.Awake();
 			PlayerController controller = GetComponent<PlayerController>();
 
@@ -56,7 +57,7 @@ namespace Character.Player
 			{
 				PhysicalController.Multiplier = 1.35f;
 				PhysicalController.Enabled = true;
-				PhysicalController.Attack("PushUpAttack", () => StartCoroutine(physicalController.Cooldown()));
+				PhysicalController.Attack("PushUpAttack");
 			};
 
 			abilities[2].Action = () =>
@@ -70,7 +71,7 @@ namespace Character.Player
 			{
 				rangeController.Multiplier = .5f;
 				rangeController.Enabled = true;
-				rangeController.Shoot("ParalyzeBullet", () => StartCoroutine(rangeController.Cooldown()));
+				rangeController.Shoot("ParalyzeBullet");
 			};
 		}
 
@@ -78,38 +79,31 @@ namespace Character.Player
 		{
 			base.Update();
 
-			if (HealthController.State == Dead) StartCoroutine(GoMenu());
+			if (HealthController.State == Dead) _levelController.LoseCondition();
 
 			if (!Enabled) return;
 
 			MovementController.Move(GetAxisRaw("Horizontal"), GetKey(LeftShift));
 			if (GetKeyDown(KeyCode.Space)) MovementController.Jump();
-			if (GetKeyDown(LeftControl)) dashController.Dash(() => StartCoroutine(dashController.Cooldown()));
+			if (GetKeyDown(LeftControl)) dashController.Dash();
 
 			if (GetMouseButton(0))
 			{
 				rangeController.Multiplier = 1f;
-				rangeController.Shoot("Bullet", () => StartCoroutine(rangeController.Cooldown()));
+				rangeController.Shoot("Bullet");
 			}
 			else if (GetMouseButton(1))
 			{
 				physicalController.Multiplier = 1f;
-				physicalController.Attack("Attack", () => StartCoroutine(physicalController.Cooldown()));
+				physicalController.Attack("Attack");
 			}
 
 			foreach (Ability ability in abilities)
 				if (GetKeyDown(ability.assignedKey))
-					ability.RealizeAbility(() => StartCoroutine(ability.Cooldown()));
+					_ = ability.RealizeAbility();
 
 			_animator.SetBool("move", GetAxisRaw("Horizontal") != 0 && MovementController.IsGrounded);
 			_animator.SetFloat("running", GetKey(LeftShift) ? 1.5f : 1);
-		}
-
-		static IEnumerator GoMenu()
-		{
-			yield return new WaitForSeconds(0.15f);
-
-			SceneManager.LoadScene("Menu");
 		}
 	}
 
@@ -120,21 +114,13 @@ namespace Character.Player
 		public Action Action { get; set; }
 		public bool Enabled { get; set; } = true;
 
-		public void RealizeAbility(Action coroutine)
+		public async Awaitable RealizeAbility()
 		{
 			if (!Enabled) return;
 
-			coroutine.Invoke();
-			Action.Invoke();
-		}
-
-
-		public IEnumerator Cooldown()
-		{
 			Enabled = false;
-
-			yield return new WaitForSeconds(cooldown);
-
+			Action.Invoke();
+			await Awaitable.WaitForSecondsAsync(cooldown);
 			Enabled = true;
 		}
 	}

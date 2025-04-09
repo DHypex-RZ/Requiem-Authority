@@ -26,7 +26,7 @@ namespace Character.Enemy
 
 			State = Behaviour();
 
-			if (Mathf.Abs(Position.x) < attackDistance) physicalController.Attack("Attack", () => StartCoroutine(physicalController.Cooldown()));
+			if (Mathf.Abs(Position.x) < attackDistance) physicalController.Attack("Attack");
 		}
 
 		void FixedUpdate() { MovementController.Move(Direction, State == InDanger && Hit && Hit.collider.tag is "Player" or "Shield"); }
