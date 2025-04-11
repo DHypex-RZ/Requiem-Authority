@@ -12,15 +12,15 @@ namespace Movement
 		public Rigidbody2D Rigidbody { get; set; }
 
 		[Header("Move")]
-		public float speed;
+		[SerializeField] float speed;
 
-		public float runSpeed;
+		[SerializeField] float runSpeed;
 		bool Running { get; set; }
 
 		[Header("Jump")]
-		public float jumpForce;
+		[SerializeField] float jumpForce;
 
-		public float groundCheckDistance = 1.225f;
+		[SerializeField] float groundCheckDistance = 1.225f;
 		public bool IsGrounded { get; set; }
 
 		public void Move(float direction, bool running = false)
@@ -37,5 +37,8 @@ namespace Movement
 		{
 			if (IsGrounded && Enabled) Rigidbody.AddForceY(Rigidbody.transform.up.y * jumpForce, ForceMode2D.Impulse);
 		}
+
+		public float JumpForce { get => jumpForce; internal set => jumpForce = value; }
+		public float GroundCheckDistance => groundCheckDistance;
 	}
 }

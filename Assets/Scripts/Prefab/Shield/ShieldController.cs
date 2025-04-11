@@ -24,7 +24,7 @@ namespace Prefab.Shield
 		public void SetParameters(CharacterManager parent, float health, float duration)
 		{
 			base.SetParameters(parent, duration);
-			HealthController.health = HealthController.CurrentHealth = health;
+			HealthController.Health = HealthController.CurrentHealth = health;
 		}
 	}
 }

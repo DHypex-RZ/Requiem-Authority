@@ -18,7 +18,7 @@ namespace Character
 		protected virtual void Awake()
 		{
 			MovementController.Rigidbody = GetComponent<Rigidbody2D>();
-			HealthController.CurrentHealth = HealthController.health;
+			HealthController.CurrentHealth = HealthController.Health;
 		}
 
 		protected virtual void Update()
@@ -34,9 +34,9 @@ namespace Character
 				return;
 			}
 
-			movementController.IsGrounded = Physics2D.Raycast(transform.position, Vector2.down, movementController.groundCheckDistance, LayerMask.GetMask("Ground"));
+			movementController.IsGrounded = Physics2D.Raycast(transform.position, Vector2.down, movementController.GroundCheckDistance, LayerMask.GetMask("Ground"));
 			#if UNITY_EDITOR
-			Debug.DrawRay(transform.position, Vector2.down * movementController.groundCheckDistance, Color.yellow);
+			Debug.DrawRay(transform.position, Vector2.down * movementController.GroundCheckDistance, Color.yellow);
 			#endif
 		}
 	}

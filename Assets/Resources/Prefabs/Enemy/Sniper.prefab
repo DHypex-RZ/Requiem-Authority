@@ -112,8 +112,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2311659948842064771, guid: d1d39fabff5e87d468f1d3d2f3266052, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -7040960777665541239, guid: d8d0e3557b93f304ba3d5df4b9f99c22, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -206,7 +206,7 @@ Animator:
   m_GameObject: {fileID: 8458572762442332494}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bd44185988820b842bc51985815bb2d2, type: 2}
+  m_Controller: {fileID: 9100000, guid: 836eba19e011f6543b4134753d22ccde, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -238,7 +238,7 @@ MonoBehaviour:
     jumpForce: 0
     groundCheckDistance: 1.225
   detectionDistance: 50
-  platformLimitDistance: 2
+  platformLimitDistance: 3
   rangeController:
     damage: 125
     cooldown: 3

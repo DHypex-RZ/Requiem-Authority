@@ -7,6 +7,7 @@ namespace Character.Enemy
 	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
 	public class SniperController: EnemyManager
 	{
+		protected Animator animator; // Pasar al padre
 		[SerializeField] float platformLimitDistance;
 		[SerializeField] RangeController rangeController;
 		float _initialPosition;
@@ -14,6 +15,7 @@ namespace Character.Enemy
 
 		protected override void Awake()
 		{
+			animator = GetComponent<Animator>(); // Pasar al padre
 			base.Awake();
 			rangeController.Character = GetComponent<SniperController>();
 			_initialPosition = transform.position.x;
@@ -45,6 +47,9 @@ namespace Character.Enemy
 		void FixedUpdate()
 		{
 			if (!Enabled) return;
+
+			if (State == InPatrol) animator.SetBool("move", _platformDirection != 0);
+			else animator.SetBool("move", Direction != 0);
 
 			MovementController.Move(State switch { InPatrol => _platformDirection, InAlert => Direction, _ => 0 });
 		}

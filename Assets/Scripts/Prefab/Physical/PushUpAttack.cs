@@ -23,7 +23,7 @@ namespace Prefab.Physical
 		{
 			const float parentJumpForce = 8.35f;
 			const float forceMultiplier = 1.5f;
-			Parent.MovementController.jumpForce *= forceMultiplier;
+			Parent.MovementController.JumpForce *= forceMultiplier;
 			character.MovementController.Rigidbody.linearVelocity = Vector2.zero;
 			character.MovementController.Enabled = character.Enabled = false;
 			character.MovementController.Rigidbody.AddForceY(Force * forceMultiplier, ForceMode2D.Impulse);
@@ -31,7 +31,7 @@ namespace Prefab.Physical
 			yield return new WaitForSeconds(0.15f);
 			yield return new WaitUntil(() => character.MovementController.IsGrounded);
 
-			Parent.MovementController.jumpForce = parentJumpForce;
+			Parent.MovementController.JumpForce = parentJumpForce;
 			character.MovementController.Enabled = character.Enabled = true;
 			Destroy(gameObject);
 		}

@@ -9,9 +9,9 @@ namespace Movement
 
 		public MovementController MovementController { get; internal set; }
 
-		public float dashForce;
-		public float cooldown;
-		public float duration;
+		[SerializeField] float dashForce;
+		[SerializeField] float cooldown;
+		[SerializeField] float duration;
 
 		public void Dash()
 		{

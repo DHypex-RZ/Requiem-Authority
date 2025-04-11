@@ -176,7 +176,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee55a1513cf745fe82be14299d244fe7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paralyzeTime: 2
   particle: {fileID: 9027514048236820043, guid: effb650189dc5714e9e9801b1cfb3991, type: 3}
 --- !u!82 &4727231344821895645
 AudioSource:
@@ -191,7 +190,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: d3247579c549643a5b3a95f9224eaf3c, type: 3}
   m_Resource: {fileID: 8300000, guid: d3247579c549643a5b3a95f9224eaf3c, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.7
   m_Pitch: 1
   Loop: 0
   Mute: 0

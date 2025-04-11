@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d1d39fabff5e87d468f1d3d2f3266052
+guid: d8d0e3557b93f304ba3d5df4b9f99c22
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2311659948842064771
-    second: Player_0
+      213: -7040960777665541239
+    second: Sniper_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,7 +100,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player_0
+      name: Sniper_0
       rect:
         serializedVersion: 2
         x: 0
@@ -115,14 +115,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d7465c336855befd0800000000000000
-      internalID: -2311659948842064771
+      spriteID: 98b89c13a7b794e90800000000000000
+      internalID: -7040960777665541239
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_1
+      name: Sniper_1
       rect:
         serializedVersion: 2
         x: 10
@@ -137,14 +137,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0aed9213a831d6842918aea3873cb223
-      internalID: 770909192
+      spriteID: 6fa47b118bc178d45b7e9d2a45acd26a
+      internalID: -1417719637
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_2
+      name: Sniper_2
       rect:
         serializedVersion: 2
         x: 20
@@ -159,14 +159,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c6e274468ee36fe429fa96299fd7651b
-      internalID: 1378112743
+      spriteID: ec3046612d1ff0b4bb37c07613bf274e
+      internalID: 1832615826
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_3
+      name: Sniper_3
       rect:
         serializedVersion: 2
         x: 30
@@ -181,14 +181,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 075cec24b0f5f754cb7088ea6309c1c4
-      internalID: -341967663
+      spriteID: b61c047bb3c47de4ea56e139eea8c934
+      internalID: 1690155404
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_4
+      name: Sniper_4
       rect:
         serializedVersion: 2
         x: 40
@@ -203,14 +203,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d388995aeb71f004882f9ee3160edf35
-      internalID: -479410250
+      spriteID: c7238e58377960a4098a8999e890ab4d
+      internalID: 1442662857
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player_5
+      name: Sniper_5
       rect:
         serializedVersion: 2
         x: 50
@@ -225,8 +225,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1d7953dfc9e60664d8f49fc3d2352011
-      internalID: 821447597
+      spriteID: 7d866152f6a273546a32bdb7a7181983
+      internalID: 1616950544
       vertices: []
       indices: 
       edges: []
@@ -235,7 +235,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5b616f2ba954e0b4e8e4712c3d18c229
+    spriteID: 5234001173b034542a99a3794ebc5e60
     internalID: 0
     vertices: []
     indices: 
@@ -245,12 +245,12 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Player_0: -2311659948842064771
-      Player_1: 770909192
-      Player_2: 1378112743
-      Player_3: -341967663
-      Player_4: -479410250
-      Player_5: 821447597
+      Sniper_0: -7040960777665541239
+      Sniper_1: -1417719637
+      Sniper_2: 1832615826
+      Sniper_3: 1690155404
+      Sniper_4: 1442662857
+      Sniper_5: 1616950544
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -26,7 +26,7 @@ namespace Character.Enemy
 		{
 			base.Update();
 
-			_healthBar.fillAmount = HealthController.CurrentHealth / HealthController.health;
+			_healthBar.fillAmount = HealthController.CurrentHealth / HealthController.Health;
 
 			if (!Enabled) return;
 

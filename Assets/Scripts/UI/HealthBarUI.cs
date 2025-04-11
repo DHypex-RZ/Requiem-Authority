@@ -15,6 +15,6 @@ namespace UI
 			_healthBar = transform.Find("HealthBar").GetComponent<Image>();
 		}
 
-		void Update() { _healthBar.fillAmount = _player.HealthController.CurrentHealth / _player.HealthController.health; }
+		void Update() { _healthBar.fillAmount = _player.HealthController.CurrentHealth / _player.HealthController.Health; }
 	}
 }
