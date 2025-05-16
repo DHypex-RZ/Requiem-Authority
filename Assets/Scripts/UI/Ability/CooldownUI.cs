@@ -14,8 +14,9 @@ namespace UI.Ability
 		void Awake()
 		{
 			_abilities = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Abilities;
+			#if UNITY_EDITOR
 			Array.Reverse(_abilities);
-
+			#endif
 			float position = initialPosition;
 
 			foreach (var ability in _abilities)
@@ -25,7 +26,7 @@ namespace UI.Ability
 				ViewerController viewer = obj.GetComponent<ViewerController>();
 				viewer.Ability = ability;
 				viewer.Start();
-				position -= 150;
+				position += 150;
 			}
 		}
 	}

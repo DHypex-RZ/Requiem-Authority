@@ -15,27 +15,26 @@ namespace Movement
 		[SerializeField] float speed;
 
 		[SerializeField] float runSpeed;
-		bool Running { get; set; }
+		bool _running;
 
 		[Header("Jump")]
 		[SerializeField] float jumpForce;
 
 		[SerializeField] float groundCheckDistance = 1.225f;
-		public bool IsGrounded { get; set; }
+		public bool Grounded { get; set; }
 
 		public void Move(float direction, bool running = false)
 		{
 			if (!Enabled) return;
 
 			Rigidbody.transform.rotation = direction switch { < 0 => Left, > 0 => Right, _ => Rigidbody.transform.rotation };
-			if (IsGrounded) Running = running;
-			Running &= running;
-			Rigidbody.linearVelocityX = direction * (Running ? runSpeed : speed);
+			_running = Grounded ? running : _running && running;
+			Rigidbody.linearVelocityX = direction * (_running ? runSpeed : speed);
 		}
 
 		public void Jump()
 		{
-			if (IsGrounded && Enabled) Rigidbody.AddForceY(Rigidbody.transform.up.y * jumpForce, ForceMode2D.Impulse);
+			if (Grounded && Enabled) Rigidbody.AddForceY(Rigidbody.transform.up.y * jumpForce, ForceMode2D.Impulse);
 		}
 
 		public float JumpForce { get => jumpForce; internal set => jumpForce = value; }

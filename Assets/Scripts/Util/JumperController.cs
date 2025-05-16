@@ -27,7 +27,7 @@ namespace Util
 		{
 			if (!activator) return;
 
-			_sprite.color = Color.red;
+			_sprite.color = Color.gray;
 			_collider.enabled = false;
 		}
 
@@ -35,7 +35,7 @@ namespace Util
 		{
 			if (!activator || activator.HealthController.State == Alive) return;
 
-			_sprite.color = Color.green;
+			_sprite.color = Color.white;
 			_collider.enabled = true;
 		}
 
@@ -46,8 +46,10 @@ namespace Util
 
 			if (!other.CompareTag("Player")) return;
 
+			if (_player.HealthController.State == Dead) return;
+
 			_player.MovementController.Rigidbody.linearVelocity = Vector2.zero;
-			_player.MovementController.Rigidbody.AddForceY(_player.transform.up.y * jumpForce, ForceMode2D.Impulse);
+			_player.MovementController.Rigidbody.AddRelativeForceY(jumpForce, ForceMode2D.Impulse);
 		}
 	}
 }

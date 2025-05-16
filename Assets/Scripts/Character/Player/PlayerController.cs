@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Combat;
 using Game.Level;
 using Movement;
@@ -10,7 +11,7 @@ using static UnityEngine.KeyCode;
 
 namespace Character.Player
 {
-	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(Animator))]
+	[RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D), typeof(Animator))]
 	public class PlayerController: CharacterManager
 	{
 		[SerializeField] DashController dashController;
@@ -79,12 +80,23 @@ namespace Character.Player
 		{
 			base.Update();
 
-			if (HealthController.State == Dead) _levelController.LoseCondition();
+			if (HealthController.State == Dead || GetKeyDown(Escape))
+			{
+				_animator.SetBool("dead", true);
+				_levelController.LoseCondition();
+			}
 
 			if (!Enabled) return;
 
 			MovementController.Move(GetAxisRaw("Horizontal"), GetKey(LeftShift));
-			if (GetKeyDown(KeyCode.Space)) MovementController.Jump();
+
+			if (GetKeyDown(KeyCode.Space))
+			{
+				MovementController.Jump();
+				_animator.SetBool("jump", true);
+				StartCoroutine(nameof(StopAnimationJump));
+			}
+
 			if (GetKeyDown(LeftControl)) dashController.Dash();
 
 			if (GetMouseButton(0))
@@ -102,8 +114,16 @@ namespace Character.Player
 				if (GetKeyDown(ability.assignedKey))
 					_ = ability.RealizeAbility();
 
-			_animator.SetBool("move", GetAxisRaw("Horizontal") != 0 && MovementController.IsGrounded);
+			_animator.SetBool("move", GetAxisRaw("Horizontal") != 0 && MovementController.Grounded);
 			_animator.SetFloat("running", GetKey(LeftShift) ? 1.5f : 1);
+		}
+
+		IEnumerator StopAnimationJump()
+		{
+			yield return new WaitForSeconds(0.1f);
+			yield return new WaitUntil(() => MovementController.Grounded);
+
+			_animator.SetBool("jump", false);
 		}
 	}
 
@@ -111,6 +131,7 @@ namespace Character.Player
 	{
 		public float cooldown;
 		public KeyCode assignedKey;
+		public Sprite icon;
 		public Action Action { get; set; }
 		public bool Enabled { get; set; } = true;
 

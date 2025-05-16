@@ -34,7 +34,7 @@ namespace Character
 				return;
 			}
 
-			movementController.IsGrounded = Physics2D.Raycast(transform.position, Vector2.down, movementController.GroundCheckDistance, LayerMask.GetMask("Ground"));
+			movementController.Grounded = Physics2D.Raycast(transform.position, Vector2.down, movementController.GroundCheckDistance, LayerMask.GetMask("Ground"));
 			#if UNITY_EDITOR
 			Debug.DrawRay(transform.position, Vector2.down * movementController.GroundCheckDistance, Color.yellow);
 			#endif

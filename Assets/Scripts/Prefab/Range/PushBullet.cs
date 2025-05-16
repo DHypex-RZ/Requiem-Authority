@@ -25,9 +25,8 @@ namespace Prefab.Range
 
 		IEnumerator Push(MovementController controller)
 		{
-			Vector3 right = transform.right;
 			controller.Enabled = false;
-			controller.Rigidbody.AddForce(right * (Speed * 0.45f), ForceMode2D.Impulse);
+			controller.Rigidbody.AddForce(transform.right * (Speed * 0.45f), ForceMode2D.Impulse);
 
 			yield return new WaitForSeconds(0.15f);
 

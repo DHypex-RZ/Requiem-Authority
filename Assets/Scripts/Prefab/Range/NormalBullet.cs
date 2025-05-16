@@ -38,7 +38,7 @@ namespace Prefab.Range
 				if (Parent.CompareTag("Player")) return;
 
 				Instantiate(particle, transform.position, Quaternion.identity);
-				shield.HealthController.TakeDamage(Damage);
+				shield.HealthController.TakeDamage(Damage / 2);
 				_ = DisablePrefab();
 			}
 

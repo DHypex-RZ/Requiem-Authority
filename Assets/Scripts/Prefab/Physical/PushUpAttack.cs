@@ -29,7 +29,7 @@ namespace Prefab.Physical
 			character.MovementController.Rigidbody.AddForceY(Force * forceMultiplier, ForceMode2D.Impulse);
 
 			yield return new WaitForSeconds(0.15f);
-			yield return new WaitUntil(() => character.MovementController.IsGrounded);
+			yield return new WaitUntil(() => character.MovementController.Grounded);
 
 			Parent.MovementController.JumpForce = parentJumpForce;
 			character.MovementController.Enabled = character.Enabled = true;

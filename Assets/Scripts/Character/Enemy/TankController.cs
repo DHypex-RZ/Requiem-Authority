@@ -11,6 +11,7 @@ namespace Character.Enemy
 		[SerializeField] float attackDistance;
 		[SerializeField] EnemyManager enemyProtected;
 		[SerializeField] PhysicalController physicalController;
+		public PhysicalController PhysicalController => physicalController;
 
 		protected override void Awake()
 		{
@@ -24,12 +25,18 @@ namespace Character.Enemy
 
 			if (!Enabled) return;
 
+			animator.SetBool("move", State != InGuard && MovementController.Enabled);
 			State = Behaviour();
 
 			if (Mathf.Abs(Position.x) < attackDistance) physicalController.Attack("Attack");
 		}
 
-		void FixedUpdate() { MovementController.Move(Direction, State == InDanger && Hit && Hit.collider.tag is "Player" or "Shield"); }
+		void FixedUpdate()
+		{
+			if (!Enabled) return;
+
+			MovementController.Move(Direction, State == InDanger && Hit && Hit.collider.tag is "Player" or "Shield");
+		}
 
 		protected override State Behaviour()
 		{

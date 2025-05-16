@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using static Health.State;
 
 namespace Character.Enemy
 {
 	public abstract class EnemyManager: CharacterManager
 	{
+		protected Animator animator;
 		protected State State { get; set; }
 		[Header("Enemy")] [SerializeField] protected float detectionDistance;
 		Transform _target;
@@ -17,6 +19,7 @@ namespace Character.Enemy
 		protected override void Awake()
 		{
 			base.Awake();
+			animator = GetComponent<Animator>();
 			_target = GameObject.FindGameObjectWithTag("Player").transform;
 			Canvas canvas = Instantiate(Resources.Load<Canvas>("Prefabs/Util/HealthBar"), transform, false);
 			_healthBar = canvas.transform.Find("Health").GetComponent<Image>();
@@ -27,6 +30,8 @@ namespace Character.Enemy
 			base.Update();
 
 			_healthBar.fillAmount = HealthController.CurrentHealth / HealthController.Health;
+
+			if (HealthController.State == Dead) animator.SetBool("dead", true);
 
 			if (!Enabled) return;
 
