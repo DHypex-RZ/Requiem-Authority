@@ -73,14 +73,14 @@ namespace Character.Player
 				rangeController.Multiplier = .5f;
 				rangeController.Enabled = true;
 				rangeController.Shoot("ParalyzeBullet");
-			};
+			}; 
 		}
 
 		protected override void Update()
 		{
 			base.Update();
 
-			if (HealthController.State == Dead || GetKeyDown(Escape))
+			if (HealthController.State == Dead)
 			{
 				_animator.SetBool("dead", true);
 				_levelController.LoseCondition();
